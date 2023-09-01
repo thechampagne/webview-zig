@@ -1,0 +1,10 @@
+.{
+    .name = "basic",
+    .version = "0.1.0",
+    .dependencies = .{
+        .webview = .{
+            .url = "https://github.com/thechampagne/webview-zig/archive/refs/tags/v0.1.0.tar.gz" ,
+            .hash = "12205bbd4be974de95c26ae8df6eac0bce49dc1ffbb3cd9b71c7a8fc76d2a1801a95",
+        },
+    },
+}
