@@ -28,9 +28,9 @@ pub const WebView = struct {
 
     pub const WebViewVersionInfo = raw.webview_version_info_t;
 
-    pub const DispatchCallback = *const fn (WebView, ?*anyopaque) callconv(.C) void;
+    pub const DispatchCallback = *const fn (WebView, ?*anyopaque) void;
 
-    pub const BindCallback = *const fn ([:0]const u8, [:0]const u8, ?*anyopaque) callconv(.C) void;
+    pub const BindCallback = *const fn ([:0]const u8, [:0]const u8, ?*anyopaque) void;
 
     pub const WindowSizeHint = enum(c_int) {
         None,
