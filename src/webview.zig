@@ -17,6 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+const mem = @import("std").mem;
 pub const raw = @import("raw.zig");
 
 pub const WebView = struct {
@@ -27,9 +28,9 @@ pub const WebView = struct {
 
     pub const WebViewVersionInfo = raw.webview_version_info_t;
 
-    pub const DispatchCallback = *const fn (raw.webview_t, ?*anyopaque) callconv(.C) void;
+    pub const DispatchCallback = *const fn (WebView, ?*anyopaque) callconv(.C) void;
 
-    pub const BindCallback = *const fn ([*c]const u8, [*c]const u8, ?*anyopaque) callconv(.C) void;
+    pub const BindCallback = *const fn ([:0]const u8, [:0]const u8, ?*anyopaque) callconv(.C) void;
 
     pub const WindowSizeHint = enum(c_int) {
         None,
@@ -51,7 +52,14 @@ pub const WebView = struct {
     }
     
     pub fn dispatch(self: Self, func: DispatchCallback, arg: ?*anyopaque) void {
-        raw.webview_dispatch(self.webview, func, arg);
+        const register = struct {
+            var callback: DispatchCallback = undefined;
+            fn call(w: raw.webview_t, ctx: ?*anyopaque) callconv(.C) void {
+                callback(.{ .webview = w}, ctx);
+            }
+        };
+        register.callback = func;
+        raw.webview_dispatch(self.webview, register.call, arg);
     }
     
     pub fn getWindow(self: Self) ?*anyopaque {
@@ -83,7 +91,14 @@ pub const WebView = struct {
     }
     
     pub fn bind(self: Self, name: [:0]const u8, func: BindCallback, arg: ?*anyopaque) void {
-        raw.webview_bind(self.webview, name.ptr, func, arg);
+        const register = struct {
+            var callback: BindCallback = undefined;
+            fn call(seq: [*c]const u8, req: [*c]const u8, ctx: ?*anyopaque) callconv(.C) void {
+                callback(mem.sliceTo(seq), mem.sliceTo(req), ctx);
+            }
+        };
+        register.callback = func;
+        raw.webview_bind(self.webview, name.ptr, register.call, arg);
     }
     
     pub fn unbind(self: Self, name: [:0]const u8) void {
