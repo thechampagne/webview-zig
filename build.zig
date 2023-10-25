@@ -42,6 +42,7 @@ pub fn build(b: *std.Build) void {
             staticLib.linkSystemLibrary("webkit2gtk-4.0");
         }
     }
+    b.installArtifact(staticLib);
 
     const sharedLib = b.addSharedLibrary(.{
         .name = "webviewShared",
@@ -59,4 +60,5 @@ pub fn build(b: *std.Build) void {
             sharedLib.linkSystemLibrary("webkit2gtk-4.0");
         }
     }
+    b.installArtifact(sharedLib);
 }
