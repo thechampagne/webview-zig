@@ -1,3 +1,2 @@
 * text=auto
-*.h linguist-language=Zig
-*.cc linguist-language=Zig
+webview/** linguist-vendored
