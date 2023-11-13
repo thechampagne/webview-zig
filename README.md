@@ -8,6 +8,17 @@ Zig binding for a tiny cross-platform **webview** library to build modern cross-
 <img src="https://raw.githubusercontent.com/thechampagne/webview-zig/main/.github/assets/screenshot.png"/>
 </p>
 
+### Usage
+```zig
+const webview = b.dependency("webview", .{
+    .target = target,
+    .optimize = optimize,
+});
+exe.addModule("webview", webview.module("webview"));
+exe.linkLibrary(webview.artifact("webviewStatic")); // or "webviewShared" for shared library
+// exe.linkSystemLibrary("webview"); to link with installed prebuilt library without building
+```
+
 ### References
  - [webview](https://github.com/webview/webview)
 
