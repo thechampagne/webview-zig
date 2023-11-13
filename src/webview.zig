@@ -17,7 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-const mem = @import("std").mem;
+const std = @import("std");
+const fmt = std.fmt;
+const mem = std.mem;
 pub const raw = @import("raw.zig");
 
 pub const WebView = struct {
@@ -51,15 +53,24 @@ pub const WebView = struct {
         raw.webview_terminate(self.webview);
     }
     
-    pub fn dispatch(self: Self, func: DispatchCallback, arg: ?*anyopaque) void {
-        const register = struct {
+    pub fn dispatch(self: Self, func: anytype, arg: ?*anyopaque) void {
+        const T = @TypeOf(func);
+        if (T != DispatchCallback and T != fn (WebView, ?*anyopaque) void) {
+            @compileError(fmt.comptimePrint("expected type 'fn (WebView, ?*anyopaque) void' or '*const fn (WebView, ?*anyopaque) void', found '{any}'",
+                                            .{T}));
+        }
+        const callback = struct {
             var callback: DispatchCallback = undefined;
-            fn call(w: raw.webview_t, ctx: ?*anyopaque) callconv(.C) void {
-                callback(.{ .webview = w}, ctx);
+            fn function(w: raw.webview_t, ctx: ?*anyopaque) callconv(.C) void {
+                if (T == DispatchCallback) {
+                    callback(.{ .webview = w}, ctx);
+                } else {
+                    @call(.always_inline, func, .{.{ .webview = w}, ctx});
+                }
             }
         };
-        register.callback = func;
-        raw.webview_dispatch(self.webview, register.call, arg);
+        if (T == DispatchCallback) callback.callback = func;
+        raw.webview_dispatch(self.webview, callback.function, arg);
     }
     
     pub fn getWindow(self: Self) ?*anyopaque {
@@ -90,15 +101,24 @@ pub const WebView = struct {
         raw.webview_eval(self.webview, js.ptr);
     }
     
-    pub fn bind(self: Self, name: [:0]const u8, func: BindCallback, arg: ?*anyopaque) void {
-        const register = struct {
+    pub fn bind(self: Self, name: [:0]const u8, func: anytype, arg: ?*anyopaque) void {
+        const T = @TypeOf(func);
+        if (T != BindCallback and T != fn (WebView, ?*anyopaque) void) {
+            @compileError(fmt.comptimePrint("expected type 'fn ([:0]const u8, [:0]const u8, ?*anyopaque) void' or '*const fn ([:0]const u8, [:0]const u8, ?*anyopaque) void', found '{any}'",
+                                            .{T}));
+        }
+        const callback = struct {
             var callback: BindCallback = undefined;
-            fn call(seq: [*c]const u8, req: [*c]const u8, ctx: ?*anyopaque) callconv(.C) void {
-                callback(mem.sliceTo(seq), mem.sliceTo(req), ctx);
+            fn function(seq: [*c]const u8, req: [*c]const u8, ctx: ?*anyopaque) callconv(.C) void {
+                if (T == BindCallback) {
+                    callback(mem.sliceTo(seq), mem.sliceTo(req), ctx);
+                } else {
+                    @call(.always_inline, func, .{mem.sliceTo(seq), mem.sliceTo(req), ctx});
+                }
             }
         };
-        register.callback = func;
-        raw.webview_bind(self.webview, name.ptr, register.call, arg);
+        if (T == BindCallback) callback.callback = func;
+        raw.webview_bind(self.webview, name.ptr, callback.function, arg);
     }
     
     pub fn unbind(self: Self, name: [:0]const u8) void {
