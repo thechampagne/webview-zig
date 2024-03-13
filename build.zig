@@ -20,6 +20,9 @@ pub fn build(b: *std.Build) void {
     switch(target.os_tag orelse @import("builtin").os.tag) {
         .windows => {
             objectFile.addIncludePath(std.build.LazyPath.relative("external/libs/Microsoft.Web.WebView2.1.0.2365.46/build/native/include/"));
+            objectFile.linkSystemLibrary("ole32");
+            objectFile.linkSystemLibrary("shlwapi");
+            objectFile.linkSystemLibrary("version");
         },
         .macos => objectFile.linkFramework("WebKit"),
         else => {
@@ -39,6 +42,9 @@ pub fn build(b: *std.Build) void {
     switch(target.os_tag orelse @import("builtin").os.tag) {
         .windows => {
             staticLib.addIncludePath(std.build.LazyPath.relative("external/libs/Microsoft.Web.WebView2.1.0.2365.46/build/native/include/"));
+            staticLib.linkSystemLibrary("ole32");
+            staticLib.linkSystemLibrary("shlwapi");
+            staticLib.linkSystemLibrary("version");
         },
         .macos => staticLib.linkFramework("WebKit"),
         else => {
@@ -59,6 +65,9 @@ pub fn build(b: *std.Build) void {
     switch(target.os_tag orelse @import("builtin").os.tag) {
         .windows => {
             sharedLib.addIncludePath(std.build.LazyPath.relative("external/libs/Microsoft.Web.WebView2.1.0.2365.46/build/native/include/"));
+            sharedLib.linkSystemLibrary("ole32");
+            sharedLib.linkSystemLibrary("shlwapi");
+            sharedLib.linkSystemLibrary("version");
         },
         .macos => sharedLib.linkFramework("WebKit"),
         else => {
