@@ -18,7 +18,9 @@ pub fn build(b: *std.Build) void {
     objectFile.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++14"}});
     objectFile.linkLibCpp();
     switch(target.os_tag orelse @import("builtin").os.tag) {
-        .windows => @compileError("Not supported platform"),
+        .windows => {
+            objectFile.addIncludePath(std.build.LazyPath.relative("external/libs/Microsoft.Web.WebView2.1.0.2365.46/build/native/include/"));
+        },
         .macos => objectFile.linkFramework("WebKit"),
         else => {
             objectFile.linkSystemLibrary("gtk+-3.0");
@@ -35,7 +37,9 @@ pub fn build(b: *std.Build) void {
     staticLib.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++14"}});
     staticLib.linkLibCpp();
     switch(target.os_tag orelse @import("builtin").os.tag) {
-        .windows => @compileError("Not supported platform"),
+        .windows => {
+            staticLib.addIncludePath(std.build.LazyPath.relative("external/libs/Microsoft.Web.WebView2.1.0.2365.46/build/native/include/"));
+        },
         .macos => staticLib.linkFramework("WebKit"),
         else => {
             staticLib.linkSystemLibrary("gtk+-3.0");
@@ -53,7 +57,9 @@ pub fn build(b: *std.Build) void {
     sharedLib.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++14"}});
     sharedLib.linkLibCpp();
     switch(target.os_tag orelse @import("builtin").os.tag) {
-        .windows => @compileError("Not supported platform"),
+        .windows => {
+            sharedLib.addIncludePath(std.build.LazyPath.relative("external/libs/Microsoft.Web.WebView2.1.0.2365.46/build/native/include/"));
+        },
         .macos => sharedLib.linkFramework("WebKit"),
         else => {
             sharedLib.linkSystemLibrary("gtk+-3.0");
