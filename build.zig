@@ -15,7 +15,7 @@ pub fn build(b: *std.Build) void {
         .target = target,
     });
     objectFile.defineCMacro("WEBVIEW_STATIC", null);
-    objectFile.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++11"}});
+    objectFile.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++14"}});
     objectFile.linkLibCpp();
     switch(target.os_tag orelse @import("builtin").os.tag) {
         .windows => @compileError("Not supported platform"),
@@ -32,7 +32,7 @@ pub fn build(b: *std.Build) void {
         .target = target,
     });
     staticLib.defineCMacro("WEBVIEW_STATIC", null);
-    staticLib.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++11"}});
+    staticLib.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++14"}});
     staticLib.linkLibCpp();
     switch(target.os_tag orelse @import("builtin").os.tag) {
         .windows => @compileError("Not supported platform"),
@@ -50,7 +50,7 @@ pub fn build(b: *std.Build) void {
         .target = target,
     });
     sharedLib.defineCMacro("WEBVIEW_BUILD_SHARED", null);
-    sharedLib.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++11"}});
+    sharedLib.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++14"}});
     sharedLib.linkLibCpp();
     switch(target.os_tag orelse @import("builtin").os.tag) {
         .windows => @compileError("Not supported platform"),
