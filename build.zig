@@ -9,34 +9,34 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const objectFile = b.addObject(.{
-        .name = "webviewObject",
-        .optimize = optimize,
-        .target = target,
-    });
-    objectFile.defineCMacro("WEBVIEW_STATIC", null);
-    objectFile.linkLibCpp();
-    switch(target.os_tag orelse @import("builtin").os.tag) {
-        .windows => {
-            objectFile.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++14"}});
-            objectFile.addIncludePath(std.build.LazyPath.relative("external/WebView2/"));
-            objectFile.linkSystemLibrary("ole32");
-            objectFile.linkSystemLibrary("shlwapi");
-            objectFile.linkSystemLibrary("version");
-            objectFile.linkSystemLibrary("advapi32");
-            objectFile.linkSystemLibrary("shell32");
-            objectFile.linkSystemLibrary("user32");
-        },
-        .macos => {
-            objectFile.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
-            objectFile.linkFramework("WebKit");
-        },
-        else => {
-            objectFile.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
-            objectFile.linkSystemLibrary("gtk+-3.0");
-            objectFile.linkSystemLibrary("webkit2gtk-4.0");
-        }
-    }
+    // const objectFile = b.addObject(.{
+    //     .name = "webviewObject",
+    //     .optimize = optimize,
+    //     .target = target,
+    // });
+    // objectFile.defineCMacro("WEBVIEW_STATIC", null);
+    // objectFile.linkLibCpp();
+    // switch(target.os_tag orelse @import("builtin").os.tag) {
+    //     .windows => {
+    //         objectFile.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++14"}});
+    //         objectFile.addIncludePath(std.build.LazyPath.relative("external/WebView2/"));
+    //         objectFile.linkSystemLibrary("ole32");
+    //         objectFile.linkSystemLibrary("shlwapi");
+    //         objectFile.linkSystemLibrary("version");
+    //         objectFile.linkSystemLibrary("advapi32");
+    //         objectFile.linkSystemLibrary("shell32");
+    //         objectFile.linkSystemLibrary("user32");
+    //     },
+    //     .macos => {
+    //         objectFile.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
+    //         objectFile.linkFramework("WebKit");
+    //     },
+    //     else => {
+    //         objectFile.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
+    //         objectFile.linkSystemLibrary("gtk+-3.0");
+    //         objectFile.linkSystemLibrary("webkit2gtk-4.0");
+    //     }
+    // }
 
     const staticLib = b.addStaticLibrary(.{
         .name = "webviewStatic",
