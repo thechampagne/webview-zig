@@ -15,12 +15,24 @@ pub fn build(b: *std.Build) void {
         .target = target,
     });
     objectFile.defineCMacro("WEBVIEW_STATIC", null);
-    objectFile.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++11"}});
     objectFile.linkLibCpp();
-    switch(@import("builtin").os.tag) {
-        .windows => @compileError("Not supported platform"),
-        .macos => objectFile.linkFramework("WebKit"),
+    switch(target.os_tag orelse @import("builtin").os.tag) {
+        .windows => {
+            objectFile.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++14"}});
+            objectFile.addIncludePath(std.build.LazyPath.relative("external/libs/Microsoft.Web.WebView2.1.0.2365.46/build/native/include/"));
+            objectFile.linkSystemLibrary("ole32");
+            objectFile.linkSystemLibrary("shlwapi");
+            objectFile.linkSystemLibrary("version");
+            objectFile.linkSystemLibrary("advapi32");
+            objectFile.linkSystemLibrary("shell32");
+            objectFile.linkSystemLibrary("user32");
+        },
+        .macos => {
+            objectFile.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++11"}});
+            objectFile.linkFramework("WebKit");
+        },
         else => {
+            objectFile.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++11"}});
             objectFile.linkSystemLibrary("gtk+-3.0");
             objectFile.linkSystemLibrary("webkit2gtk-4.0");
         }
@@ -32,12 +44,24 @@ pub fn build(b: *std.Build) void {
         .target = target,
     });
     staticLib.defineCMacro("WEBVIEW_STATIC", null);
-    staticLib.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++11"}});
     staticLib.linkLibCpp();
-    switch(@import("builtin").os.tag) {
-        .windows => @compileError("Not supported platform"),
-        .macos => staticLib.linkFramework("WebKit"),
+    switch(target.os_tag orelse @import("builtin").os.tag) {
+        .windows => {
+            staticLib.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++14"}});
+            staticLib.addIncludePath(std.build.LazyPath.relative("external/libs/Microsoft.Web.WebView2.1.0.2365.46/build/native/include/"));
+            staticLib.linkSystemLibrary("ole32");
+            staticLib.linkSystemLibrary("shlwapi");
+            staticLib.linkSystemLibrary("version");
+            staticLib.linkSystemLibrary("advapi32");
+            staticLib.linkSystemLibrary("shell32");
+            staticLib.linkSystemLibrary("user32");
+        },
+        .macos => {
+            staticLib.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++11"}});
+            staticLib.linkFramework("WebKit");
+        },
         else => {
+            staticLib.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++11"}});
             staticLib.linkSystemLibrary("gtk+-3.0");
             staticLib.linkSystemLibrary("webkit2gtk-4.0");
         }
@@ -50,12 +74,24 @@ pub fn build(b: *std.Build) void {
         .target = target,
     });
     sharedLib.defineCMacro("WEBVIEW_BUILD_SHARED", null);
-    sharedLib.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++11"}});
     sharedLib.linkLibCpp();
-    switch(@import("builtin").os.tag) {
-        .windows => @compileError("Not supported platform"),
-        .macos => sharedLib.linkFramework("WebKit"),
+    switch(target.os_tag orelse @import("builtin").os.tag) {
+        .windows => {
+            sharedLib.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++14"}});
+            sharedLib.addIncludePath(std.build.LazyPath.relative("external/libs/Microsoft.Web.WebView2.1.0.2365.46/build/native/include/"));
+            sharedLib.linkSystemLibrary("ole32");
+            sharedLib.linkSystemLibrary("shlwapi");
+            sharedLib.linkSystemLibrary("version");
+            sharedLib.linkSystemLibrary("advapi32");
+            sharedLib.linkSystemLibrary("shell32");
+            sharedLib.linkSystemLibrary("user32");
+        },
+        .macos => {
+            sharedLib.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++11"}});
+            sharedLib.linkFramework("WebKit");
+        },
         else => {
+            sharedLib.addCSourceFile(.{ .file = .{ .path = "webview/webview.cc"}, .flags = &.{"-std=c++11"}});
             sharedLib.linkSystemLibrary("gtk+-3.0");
             sharedLib.linkSystemLibrary("webkit2gtk-4.0");
         }
