@@ -8,6 +8,15 @@ Zig binding for a tiny cross-platform **webview** library to build modern cross-
 <img src="https://raw.githubusercontent.com/thechampagne/webview-zig/main/.github/assets/screenshot.png"/>
 </p>
 
+### Requirements
+ - [Zig Compiler](https://ziglang.org/) - **0.11.0**
+ - Unix
+   - [GTK3](https://webkitgtk.org/) and [WebKitGTK](https://webkitgtk.org/)
+ - Windows
+   - [WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
+ - macOS
+   - [WebKit](https://webkit.org/)
+
 ### Usage
 ```zig
 const webview = b.dependency("webview", .{
