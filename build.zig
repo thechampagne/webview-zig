@@ -2,8 +2,8 @@ const std = @import("std");
 
 pub fn build(b: *std.Build) void {
     _ = b.addModule("webview", .{
-        .source_file = .{ .path = "src/webview.zig" },
-        .dependencies = &[_]std.Build.ModuleDependency{},
+        .root_source_file = .{ .path = "src/webview.zig" },
+      //.dependencies = &[_]std.Build.ModuleDependency{},
     });
 
     const target = b.standardTargetOptions(.{});
@@ -45,10 +45,10 @@ pub fn build(b: *std.Build) void {
     });
     staticLib.defineCMacro("WEBVIEW_STATIC", null);
     staticLib.linkLibCpp();
-    switch(target.os_tag orelse @import("builtin").os.tag) {
+    switch(target.query.os_tag orelse @import("builtin").os.tag) {
         .windows => {
             staticLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++14"}});
-            staticLib.addIncludePath(std.build.LazyPath.relative("external/WebView2/"));
+            staticLib.addIncludePath(std.Build.LazyPath.relative("external/WebView2/"));
             staticLib.linkSystemLibrary("ole32");
             staticLib.linkSystemLibrary("shlwapi");
             staticLib.linkSystemLibrary("version");
@@ -75,10 +75,10 @@ pub fn build(b: *std.Build) void {
     });
     sharedLib.defineCMacro("WEBVIEW_BUILD_SHARED", null);
     sharedLib.linkLibCpp();
-    switch(target.os_tag orelse @import("builtin").os.tag) {
+    switch(target.query.os_tag orelse @import("builtin").os.tag) {
         .windows => {
             sharedLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++14"}});
-            sharedLib.addIncludePath(std.build.LazyPath.relative("external/WebView2/"));
+            sharedLib.addIncludePath(std.Build.LazyPath.relative("external/WebView2/"));
             sharedLib.linkSystemLibrary("ole32");
             sharedLib.linkSystemLibrary("shlwapi");
             sharedLib.linkSystemLibrary("version");
