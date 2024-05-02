@@ -1,10 +1,11 @@
 .{
     .name = "eval",
     .version = "0.1.0",
+    .paths = .{""},
     .dependencies = .{
         .webview = .{
-            .url = "https://github.com/thechampagne/webview-zig/archive/755f98eacea21a845ae47129556a7309d53005ae.tar.gz" ,
-            .hash = "12200a5a5dfb861c53f9aba0b9eeeb0d832c03cd518ae3c4deb772d9cccf846760f9",
+            .url = "https://github.com/thechampagne/webview-zig/archive/refs/heads/main.tar.gz" ,
+            .hash = "12208586373679a455aa8ef874112c93c1613196f60137878d90ce9d2ae8fb9cd511",
         },
     },
 }

@@ -26,7 +26,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    exe.addModule("webview", webview.module("webview"));
+    exe.root_module.addImport("webview", webview.module("webview"));
 
     exe.linkLibC();
 
