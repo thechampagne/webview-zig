@@ -9,7 +9,7 @@ Zig binding for a tiny cross-platform **webview** library to build modern cross-
 </p>
 
 ### Requirements
- - [Zig Compiler](https://ziglang.org/) - **0.11.0**
+ - [Zig Compiler](https://ziglang.org/) - **0.12.0**
  - Unix
    - [GTK3](https://webkitgtk.org/) and [WebKitGTK](https://webkitgtk.org/)
  - Windows
