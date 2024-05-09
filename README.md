@@ -18,6 +18,18 @@ Zig binding for a tiny cross-platform **webview** library to build modern cross-
    - [WebKit](https://webkit.org/)
 
 ### Usage
+`build.zig.zon`:
+```zig
+.{
+    .dependencies = .{
+        .webview = .{
+            .url = "https://github.com/thechampagne/webview-zig/archive/refs/heads/main.tar.gz" ,
+            .hash = "12208586373679a455aa8ef874112c93c1613196f60137878d90ce9d2ae8fb9cd511",
+        },
+    },
+}
+```
+`build.zig`:
 ```zig
 const webview = b.dependency("webview", .{
     .target = target,
