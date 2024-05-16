@@ -11,7 +11,7 @@ Zig binding for a tiny cross-platform **webview** library to build modern cross-
 ### Requirements
  - [Zig Compiler](https://ziglang.org/) - **0.12.0**
  - Unix
-   - [GTK3](https://webkitgtk.org/) and [WebKitGTK](https://webkitgtk.org/)
+   - [GTK3](https://gtk.org/) and [WebKitGTK](https://webkitgtk.org/)
  - Windows
    - [WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
  - macOS
