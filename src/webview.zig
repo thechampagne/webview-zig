@@ -103,7 +103,7 @@ pub const WebView = struct {
     
     pub fn bind(self: Self, name: [:0]const u8, func: anytype, arg: ?*anyopaque) void {
         const T = @TypeOf(func);
-        if (T != BindCallback and T != fn (WebView, ?*anyopaque) void) {
+        if (T != BindCallback and T != fn ([:0]const u8, [:0]const u8, ?*anyopaque) void) {
             @compileError(fmt.comptimePrint("expected type 'fn ([:0]const u8, [:0]const u8, ?*anyopaque) void' or '*const fn ([:0]const u8, [:0]const u8, ?*anyopaque) void', found '{any}'",
                                             .{T}));
         }
@@ -111,9 +111,9 @@ pub const WebView = struct {
             var callback: BindCallback = undefined;
             fn function(seq: [*c]const u8, req: [*c]const u8, ctx: ?*anyopaque) callconv(.C) void {
                 if (T == BindCallback) {
-                    callback(mem.sliceTo(seq), mem.sliceTo(req), ctx);
+                    callback(mem.sliceTo(seq, 0), mem.sliceTo(req, 0), ctx);
                 } else {
-                    @call(.always_inline, func, .{mem.sliceTo(seq), mem.sliceTo(req), ctx});
+                    @call(.always_inline, func, .{mem.sliceTo(seq, 0), mem.sliceTo(req, 0), ctx});
                 }
             }
         };
