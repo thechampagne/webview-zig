@@ -46,3 +46,7 @@ exe.linkLibrary(webview.artifact("webviewStatic")); // or "webviewShared" for sh
 ### License
 
 This repo is released under the [MIT License](https://github.com/thechampagne/webview-zig/blob/main/LICENSE).
+
+Third party code:
+ - [external/webview](https://github.com/thechampagne/webview-zig/tree/main/external/webview) licensed under the [MIT License](https://github.com/thechampagne/webview-zig/tree/main/external/webview/LICENSE).
+ - [external/WebView2](https://github.com/thechampagne/webview-zig/tree/main/external/WebView2) licensed under the [BSD-3-Clause License](https://github.com/thechampagne/webview-zig/tree/main/external/WebView2/LICENSE).
