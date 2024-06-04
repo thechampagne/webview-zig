@@ -18,6 +18,11 @@ Zig binding for a tiny cross-platform **webview** library to build modern cross-
    - [WebKit](https://webkit.org/)
 
 ### Usage
+#### Auto
+```
+zig fetch --save https://github.com/thechampagne/webview-zig/archive/refs/heads/main.tar.gz
+```
+#### Manual
 `build.zig.zon`:
 ```zig
 .{
