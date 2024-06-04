@@ -3,10 +3,8 @@
     .version = "0.1.0",
     .paths = .{
         "LICENSE",
-        ".gitignore",
-        ".gitattributes",
         "README.md",
-        "examples"
+        "examples",
         "build.zig",
         "build.zig.zon", 
         "src", 
