@@ -1,8 +1,12 @@
 .{
     .name = "webview",
-    .version = "1.0.0",
-    .dependencies = .{},
-    .paths = .{ 
+    .version = "0.1.0",
+    .paths = .{
+        "LICENSE",
+        ".gitignore",
+        ".gitattributes",
+        "README.md",
+        "examples"
         "build.zig",
         "build.zig.zon", 
         "src", 
