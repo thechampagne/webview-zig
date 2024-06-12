@@ -60,6 +60,11 @@ pub fn build(b: *std.Build) void {
             staticLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
             staticLib.linkFramework("WebKit");
         },
+        .freebsd => {
+            staticLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
+            staticLib.linkSystemLibrary("gtk3");
+            staticLib.linkSystemLibrary("webkit2-gtk3");
+        },
         else => {
             staticLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
             staticLib.linkSystemLibrary("gtk+-3.0");
@@ -89,6 +94,11 @@ pub fn build(b: *std.Build) void {
         .macos => {
             sharedLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
             sharedLib.linkFramework("WebKit");
+        },
+        .freebsd => {
+            staticLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
+            staticLib.linkSystemLibrary("gtk3");
+            staticLib.linkSystemLibrary("webkit2-gtk3");
         },
         else => {
             sharedLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
