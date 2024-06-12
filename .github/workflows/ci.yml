@@ -17,8 +17,8 @@ jobs:
         prepare: |
           pkg install -y webkit2-gtk3 wget
         run: |
-          wget https://ziglang.org/download/0.12.1/zig-freebsd-x86_64-0.12.1.tar.xz > /dev/null
-          tar -xvf zig-freebsd-x86_64-0.12.1.tar.xz > /dev/null
+          wget https://ziglang.org/download/0.12.1/zig-freebsd-x86_64-0.12.1.tar.xz
+          tar -xvf zig-freebsd-x86_64-0.12.1.tar.xz
           ./zig-freebsd-x86_64-0.12.1/zig build
           
   linux-build:
