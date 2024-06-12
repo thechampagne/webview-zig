@@ -64,6 +64,7 @@ pub fn build(b: *std.Build) void {
             staticLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
             staticLib.addIncludePath(.{ .path = "/usr/local/include/gtk-3.0/"});
             staticLib.addIncludePath(.{ .path = "/usr/local/include/glib-2.0/"});
+            staticLib.addIncludePath(.{ .path = "/usr/local/lib/glib-2.0/include/"});
             staticLib.addIncludePath(.{ .path = "/usr/local/include/webkitgtk-4.0/"});
             staticLib.linkSystemLibrary("gtk-3");
             staticLib.linkSystemLibrary("webkit2gtk-4.0");
@@ -102,6 +103,7 @@ pub fn build(b: *std.Build) void {
             sharedLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
             sharedLib.addIncludePath(.{ .path = "/usr/local/include/gtk-3.0/"});
             sharedLib.addIncludePath(.{ .path = "/usr/local/include/glib-2.0/"});
+            sharedLib.addIncludePath(.{ .path = "/usr/local/lib/glib-2.0/include/"});
             sharedLib.addIncludePath(.{ .path = "/usr/local/include/webkitgtk-4.0/"});
             sharedLib.linkSystemLibrary("gtk-3");
             sharedLib.linkSystemLibrary("webkit2gtk-4.0");
