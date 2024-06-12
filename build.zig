@@ -62,6 +62,7 @@ pub fn build(b: *std.Build) void {
         },
         .freebsd => {
             staticLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
+            staticLib.addIncludePath(.{ .path = "/usr/local/include/"});
             staticLib.addIncludePath(.{ .path = "/usr/local/include/gtk-3.0/"});
             staticLib.addIncludePath(.{ .path = "/usr/local/include/glib-2.0/"});
             staticLib.addIncludePath(.{ .path = "/usr/local/lib/glib-2.0/include/"});
@@ -103,6 +104,7 @@ pub fn build(b: *std.Build) void {
         },
         .freebsd => {
             sharedLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
+            sharedLib.addIncludePath(.{ .path = "/usr/local/include/"});
             sharedLib.addIncludePath(.{ .path = "/usr/local/include/gtk-3.0/"});
             sharedLib.addIncludePath(.{ .path = "/usr/local/include/glib-2.0/"});
             sharedLib.addIncludePath(.{ .path = "/usr/local/lib/glib-2.0/include/"});
