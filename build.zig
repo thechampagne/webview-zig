@@ -96,9 +96,9 @@ pub fn build(b: *std.Build) void {
             sharedLib.linkFramework("WebKit");
         },
         .freebsd => {
-            staticLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
-            staticLib.linkSystemLibrary("gtk3");
-            staticLib.linkSystemLibrary("webkit2-gtk3");
+            sharedLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
+            sharedLib.linkSystemLibrary("gtk3");
+            sharedLib.linkSystemLibrary("webkit2-gtk3");
         },
         else => {
             sharedLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
