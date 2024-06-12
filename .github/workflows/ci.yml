@@ -7,6 +7,20 @@ on:
     branches: [ "main" ]
 
 jobs:
+  freebsd-build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: vmactions/freebsd-vm@v1
+      with:
+        copyback: false
+        prepare: |
+          pkg install -y webkit2-gtk3
+        run: |
+          wget https://ziglang.org/download/0.12.1/zig-freebsd-x86_64-0.12.1.tar.xz
+          tar -xvf zig-freebsd-x86_64-0.12.1.tar.xz
+          ./zig-freebsd-x86_64-0.12.1/zig build
+          
   linux-build:
     runs-on: ubuntu-latest
     steps:
