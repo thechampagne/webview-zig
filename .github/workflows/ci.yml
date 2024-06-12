@@ -20,7 +20,18 @@ jobs:
           wget https://ziglang.org/download/0.12.1/zig-freebsd-x86_64-0.12.1.tar.xz
           tar -xvf zig-freebsd-x86_64-0.12.1.tar.xz
           ./zig-freebsd-x86_64-0.12.1/zig build
-          
+
+  netbsd-build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: vmactions/netbsd-vm@v1
+      with:
+        copyback: false
+        prepare: |
+          /usr/sbin/pkg_add gtk3 webkit-gtk zig
+        run: zig build
+
   linux-build:
     runs-on: ubuntu-latest
     steps:
