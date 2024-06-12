@@ -63,7 +63,7 @@ pub fn build(b: *std.Build) void {
         .freebsd => {
             staticLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
             staticLib.linkSystemLibrary("gtk-3");
-            staticLib.linkSystemLibrary("webkit2gtk");
+            staticLib.linkSystemLibrary("webkit2gtk-4.0");
         },
         else => {
             staticLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
@@ -98,7 +98,7 @@ pub fn build(b: *std.Build) void {
         .freebsd => {
             sharedLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
             sharedLib.linkSystemLibrary("gtk-3");
-            sharedLib.linkSystemLibrary("webkit2gtk");
+            sharedLib.linkSystemLibrary("webkit2gtk-4.0");
         },
         else => {
             sharedLib.addCSourceFile(.{ .file = .{ .path = "external/webview/webview.cc"}, .flags = &.{"-std=c++11"}});
