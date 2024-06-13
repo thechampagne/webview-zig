@@ -30,7 +30,9 @@ jobs:
         copyback: false
         envs: PKGSRC_BRANCH
         prepare: |
-          PKG_PATH="https://cdn.NetBSD.org/pub/pkgsrc/packages/NetBSD/$(uname -p)/$(uname -r | cut -d_ -f1)_${PKGSRC_BRANCH}/All" /usr/sbin/pkg_add pkgin
+          PKG_PATH="http://cdn.NetBSD.org/pub/pkgsrc/packages/NetBSD/$(uname -p)/$(uname -r|cut -f '1 2' -d.)/All/"
+          export PKG_PATH
+          /usr/sbin/pkg_add pkgin
           pkgin install -y gtk3 fontconfig webkit-gtk zig
         run: zig build
 
