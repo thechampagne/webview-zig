@@ -21,28 +21,6 @@ jobs:
           tar -xvf zig-freebsd-x86_64-0.12.1.tar.xz
           ./zig-freebsd-x86_64-0.12.1/zig build
 
-  netbsd-build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: vmactions/netbsd-vm@v1
-      with:
-        copyback: false
-        prepare: |
-          PKG_PATH="http://cdn.NetBSD.org/pub/pkgsrc/packages/NetBSD/$(uname -p)/$(uname -r|cut -f '1 2' -d.)/All/"
-          export PKG_PATH
-          /usr/sbin/pkg_add pkgin
-          pkgin -y install wget
-          wget http://cdn.netbsd.org/pub/pkgsrc/packages/NetBSD/x86_64/10.0/All/dbus-1.14.10.tgz
-          tar -xvf dbus-1.14.10.tgz
-          ./+INSTALL
-          pkgin -y install webkit-gtk
-          cat /var/db/pkgin/pkg_install-err.log
-        run: |
-          wget http://cdn.netbsd.org/pub/pkgsrc/packages/NetBSD/x86_64/9.0_current/All/zig-0.12.0nb2.tgz
-          tar -xvf zig-0.12.0nb2.tgz
-          ./bin/zig build
-
   linux-build:
     runs-on: ubuntu-latest
     steps:
