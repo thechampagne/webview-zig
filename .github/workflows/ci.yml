@@ -33,7 +33,7 @@ jobs:
           export PKG_PATH
           /usr/sbin/pkg_add pkgin
           pkgin -y install webkit-gtk wget
-          echo /var/db/pkgin/pkg_install-err.log
+          cat /var/db/pkgin/pkg_install-err.log # really did i use echo instead of cat !!!
         run: |
           wget http://cdn.netbsd.org/pub/pkgsrc/packages/NetBSD/x86_64/9.0_current/All/zig-0.12.0nb2.tgz
           tar -xvf zig-0.12.0nb2.tgz
