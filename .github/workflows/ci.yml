@@ -32,9 +32,11 @@ jobs:
           PKG_PATH="http://cdn.NetBSD.org/pub/pkgsrc/packages/NetBSD/$(uname -p)/$(uname -r|cut -f '1 2' -d.)/All/"
           export PKG_PATH
           /usr/sbin/pkg_add pkgin
-          pkgin update
-          pkgin -y install gtk3 fontconfig webkit-gtk zig
-        run: zig build
+          pkgin -y install webkit-gtk wget
+        run: |
+          wget http://cdn.netbsd.org/pub/pkgsrc/packages/NetBSD/x86_64/9.0_current/All/zig-0.12.0nb2.tgz
+          tar -xvf zig-0.12.0nb2.tgz
+          ./bin/zig build
 
   linux-build:
     runs-on: ubuntu-latest
