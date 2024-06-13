@@ -34,7 +34,8 @@ jobs:
           /usr/sbin/pkg_add pkgin
           pkgin -y install wget
           wget http://cdn.netbsd.org/pub/pkgsrc/packages/NetBSD/x86_64/10.0/All/dbus-1.14.10.tgz
-          pkgin -y install ./dbus-1.14.10.tgz
+          tar -xvf dbus-1.14.10.tgz
+          ./+INSTALL
           pkgin -y install webkit-gtk
           cat /var/db/pkgin/pkg_install-err.log
         run: |
