@@ -28,12 +28,11 @@ jobs:
     - uses: vmactions/netbsd-vm@v1
       with:
         copyback: false
+        envs: PKGSRC_BRANCH
         prepare: |
-          /usr/sbin/pkg_add gtk3 fontconfig webkit-gtk wget
-        run: |
-          wget https://cdn.netbsd.org/pub/pkgsrc/packages/NetBSD/x86_64/9.0_current/All/zig-0.12.0nb2.tgz
-          tar -xvf zig-0.12.0nb2.tgz
-          ./bin/zig build
+          PKG_PATH="https://cdn.NetBSD.org/pub/pkgsrc/packages/NetBSD/$(uname -p)/$(uname -r | cut -d_ -f1)_${PKGSRC_BRANCH}/All" /usr/sbin/pkg_add pkgin
+          pkgin install -y gtk3 fontconfig webkit-gtk zig
+        run: zig build
 
   linux-build:
     runs-on: ubuntu-latest
