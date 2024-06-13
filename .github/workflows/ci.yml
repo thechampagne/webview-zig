@@ -29,7 +29,7 @@ jobs:
       with:
         copyback: false
         prepare: |
-          /usr/sbin/pkg_add gtk3 webkit-gtk zig
+          /usr/sbin/pkg_add gtk3 fontconfig webkit-gtk lang/zig
         run: zig build
 
   linux-build:
