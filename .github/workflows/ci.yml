@@ -32,8 +32,11 @@ jobs:
           PKG_PATH="http://cdn.NetBSD.org/pub/pkgsrc/packages/NetBSD/$(uname -p)/$(uname -r|cut -f '1 2' -d.)/All/"
           export PKG_PATH
           /usr/sbin/pkg_add pkgin
-          pkgin -y install webkit-gtk wget dbus
-          cat /var/db/pkgin/pkg_install-err.log # really did i use echo instead of cat !!!
+          cd /usr/pkgsrc/sysutils/dbus
+          make install clean
+          cd
+          pkgin -y install webkit-gtk wget
+          cat /var/db/pkgin/pkg_install-err.log
         run: |
           wget http://cdn.netbsd.org/pub/pkgsrc/packages/NetBSD/x86_64/9.0_current/All/zig-0.12.0nb2.tgz
           tar -xvf zig-0.12.0nb2.tgz
