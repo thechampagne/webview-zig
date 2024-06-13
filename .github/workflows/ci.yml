@@ -32,10 +32,10 @@ jobs:
           PKG_PATH="http://cdn.NetBSD.org/pub/pkgsrc/packages/NetBSD/$(uname -p)/$(uname -r|cut -f '1 2' -d.)/All/"
           export PKG_PATH
           /usr/sbin/pkg_add pkgin
-          cd /usr/pkgsrc/sysutils/dbus
-          make install clean
-          cd
-          pkgin -y install webkit-gtk wget
+          pkgin -y install wget
+          wget http://cdn.netbsd.org/pub/pkgsrc/packages/NetBSD/x86_64/10.0/All/dbus-1.14.10.tgz
+          pkgin -y install ./dbus-1.14.10.tgz
+          pkgin -y install webkit-gtk
           cat /var/db/pkgin/pkg_install-err.log
         run: |
           wget http://cdn.netbsd.org/pub/pkgsrc/packages/NetBSD/x86_64/9.0_current/All/zig-0.12.0nb2.tgz
