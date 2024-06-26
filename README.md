@@ -46,7 +46,7 @@ exe.linkLibrary(webview.artifact("webviewStatic")); // or "webviewShared" for sh
 ```
 
 ### References
- - [webview](https://github.com/webview/webview)
+ - [webview](https://github.com/webview/webview) - **0.10.0**
 
 ### License
 
