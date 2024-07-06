@@ -25,8 +25,6 @@ pub const raw = @import("raw.zig");
 pub const WebView = struct {
     
     webview: raw.webview_t,
-    funcs: std.ArrayList(*anyopaque) = undefined,
-    funcs_init: bool = false,
 
     const Self = @This();
 
@@ -43,6 +41,17 @@ pub const WebView = struct {
         Fixed
     };
 
+    pub fn CallbackContext(func: anytype) type {
+        return struct {
+            func: @TypeOf(func) = func,
+            data: ?*anyopaque,
+
+            pub fn init(data: ?*anyopaque) @This() {
+                return .{.data = data};
+            }
+        };
+    }
+
     pub fn create(debug: bool, window: ?*anyopaque) Self {
         return Self{ .webview = raw.webview_create(@intFromBool(debug), window) };
     }
@@ -55,38 +64,23 @@ pub const WebView = struct {
         raw.webview_terminate(self.webview);
     }
     
-    pub fn dispatch(self: *Self, func: anytype, arg: ?*anyopaque) !void {
-        const T = @TypeOf(func);
+    pub fn dispatch(self: *Self, ctx: anytype) void {
+        const T = @TypeOf(ctx.func);
         if (T != DispatchCallback and T != fn (WebView, ?*anyopaque) void) {
             @compileError(fmt.comptimePrint("expected type 'fn (WebView, ?*anyopaque) void' or '*const fn (WebView, ?*anyopaque) void', found '{any}'",
                                             .{T}));
         }
-        const CallbackData = struct {
-            function: DispatchCallback,
-            data: ?*anyopaque,
-        };
         const Callback = struct {
-            fn function(w: raw.webview_t, ctx: ?*anyopaque) callconv(.C) void {
-                if (T == DispatchCallback) {
-                    const cb: *CallbackData = @ptrCast(@alignCast(ctx));
-                    cb.function(.{ .webview = w}, cb.data);
+            fn function(w: raw.webview_t, arg: ?*anyopaque) callconv(.C) void {
+                const cb: @TypeOf(ctx) = @ptrCast(@alignCast(arg));
+                if (@TypeOf(ctx.func) == DispatchCallback) {
+                    cb.func(.{ .webview = w}, cb.data);
                 } else {
-                    @call(.always_inline, func, .{.{ .webview = w}, ctx});
+                    @call(.always_inline, ctx.func, .{.{ .webview = w}, ctx.data});
                 }
             }
         };
-        if (T == DispatchCallback) {
-            if (!self.funcs_init) {
-                self.funcs = std.ArrayList(*anyopaque).init(std.heap.c_allocator);
-                self.funcs_init = true;
-            }
-            const callback = try std.heap.c_allocator.create(CallbackData);
-            callback.* = .{ .function = func, .data = arg};
-            try self.funcs.append(callback);
-            raw.webview_dispatch(self.webview, Callback.function, callback);
-        } else {
-            raw.webview_dispatch(self.webview, Callback.function, arg);
-        }
+        raw.webview_dispatch(self.webview, Callback.function, @constCast(ctx));
     }
     
     pub fn getWindow(self: Self) ?*anyopaque {
@@ -117,38 +111,22 @@ pub const WebView = struct {
         raw.webview_eval(self.webview, js.ptr);
     }
     
-    pub fn bind(self: *Self, name: [:0]const u8, func: anytype, arg: ?*anyopaque) !void {
-        const T = @TypeOf(func);
+    pub fn bind(self: *Self, name: [:0]const u8, ctx: anytype) void {
+        const T = @TypeOf(ctx.func);
         if (T != BindCallback and T != fn ([:0]const u8, [:0]const u8, ?*anyopaque) void) {
-            @compileError(fmt.comptimePrint("expected type 'fn ([:0]const u8, [:0]const u8, ?*anyopaque) void' or '*const fn ([:0]const u8, [:0]const u8, ?*anyopaque) void', found '{any}'",
-                                            .{T}));
+            @compileError(fmt.comptimePrint("expected type 'fn ([:0]const u8, [:0]const u8, ?*anyopaque) void' or '*const fn ([:0]const u8, [:0]const u8, ?*anyopaque) void', found '{any}'", .{T}));
         }
-        const CallbackData = struct {
-            function: BindCallback,
-            data: ?*anyopaque,
-        };
         const Callback = struct {
-            fn function(seq: [*c]const u8, req: [*c]const u8, ctx: ?*anyopaque) callconv(.C) void {
-                if (T == BindCallback) {
-                    const cb: *CallbackData = @ptrCast(@alignCast(ctx));
-                    cb.function(mem.sliceTo(seq, 0), mem.sliceTo(req, 0), cb.data);
+            fn function(seq: [*c]const u8, req: [*c]const u8, arg: ?*anyopaque) callconv(.C) void {
+                const cb: @TypeOf(ctx) = @ptrCast(@alignCast(arg));
+                if (@TypeOf(ctx.func) == BindCallback) {
+                    cb.func(mem.sliceTo(seq, 0), mem.sliceTo(req, 0), cb.data);
                 } else {
-                    @call(.always_inline, func, .{mem.sliceTo(seq, 0), mem.sliceTo(req, 0), ctx});
+                    @call(.always_inline, ctx.func, .{mem.sliceTo(seq, 0), mem.sliceTo(req, 0), ctx.data});
                 }
             }
         };
-        if (T == BindCallback) {
-            if (!self.funcs_init) {
-                self.funcs = std.ArrayList(*anyopaque).init(std.heap.c_allocator);
-                self.funcs_init = true;
-            }
-            const callback = try std.heap.c_allocator.create(CallbackData);
-            callback.* = .{ .function = func, .data = arg};
-            try self.funcs.append(callback);
-            raw.webview_bind(self.webview, name.ptr, Callback.function, callback);
-        } else {
-            raw.webview_bind(self.webview, name.ptr, Callback.function, arg);
-        }
+        raw.webview_bind(self.webview, name.ptr, Callback.function, @constCast(ctx));
     }
     
     pub fn unbind(self: Self, name: [:0]const u8) void {
@@ -164,10 +142,6 @@ pub const WebView = struct {
     }
 
     pub fn destroy(self: Self) void {
-        for(self.funcs.items) |it| {
-            std.heap.c_allocator.destroy(@as(*struct { *anyopaque, *anyopaque }, @ptrCast(@alignCast(it))));
-        }
-        self.funcs.deinit();
         raw.webview_destroy(self.webview);
     }
 };
