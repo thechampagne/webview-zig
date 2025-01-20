@@ -64,7 +64,7 @@ pub const WebView = struct {
         raw.webview_terminate(self.webview);
     }
     
-    pub fn dispatch(self: *Self, ctx: anytype) void {
+    pub fn dispatch(self: Self, ctx: anytype) void {
         const T = @TypeOf(ctx.func);
         if (T != DispatchCallback and T != fn (WebView, ?*anyopaque) void) {
             @compileError(fmt.comptimePrint("expected type 'fn (WebView, ?*anyopaque) void' or '*const fn (WebView, ?*anyopaque) void', found '{any}'",
@@ -111,7 +111,7 @@ pub const WebView = struct {
         raw.webview_eval(self.webview, js.ptr);
     }
     
-    pub fn bind(self: *Self, name: [:0]const u8, ctx: anytype) void {
+    pub fn bind(self: Self, name: [:0]const u8, ctx: anytype) void {
         const T = @TypeOf(ctx.func);
         if (T != BindCallback and T != fn ([:0]const u8, [:0]const u8, ?*anyopaque) void) {
             @compileError(fmt.comptimePrint("expected type 'fn ([:0]const u8, [:0]const u8, ?*anyopaque) void' or '*const fn ([:0]const u8, [:0]const u8, ?*anyopaque) void', found '{any}'", .{T}));
