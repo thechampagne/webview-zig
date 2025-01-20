@@ -1,6 +1,12 @@
 .{
     .name = "webview",
     .version = "0.1.0",
+    .dependencies = .{
+        .webview = .{
+            .url = "https://github.com/webview/webview/archive/refs/tags/0.10.0.tar.gz",
+            .hash = "12200d1b88168bad9562b3d617a7ee4717164ae9503d13ebd6fabe5566a85175428d",
+        },
+    },
     .paths = .{
         "LICENSE",
         "README.md",
