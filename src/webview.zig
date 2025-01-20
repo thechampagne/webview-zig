@@ -47,14 +47,14 @@ pub const WebView = struct {
 
     pub const BindCallback = *const fn ([:0]const u8, [:0]const u8, ?*anyopaque) void;
 
-    pub const WindowSizeHint = enum(c_int) {
+    pub const WindowSizeHint = enum(c_uint) {
         None,
         Min,
         Max,
         Fixed
     };
 
-    pub const NativeHandle = enum(c_int) {
+    pub const NativeHandle = enum(c_uint) {
         ui_window,
         ui_widget,
         browser_controller
