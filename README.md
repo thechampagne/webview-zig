@@ -51,7 +51,7 @@ exe.linkLibrary(webview.artifact("webviewStatic")); // or "webviewShared" for sh
 const WebView = struct {
 
     const WebViewVersionInfo = struct {
-        version = struct {
+        version: struct {
             major: c_uint,
             minor: c_uint,
             patch: c_uint,
@@ -100,7 +100,7 @@ const WebView = struct {
 
     fn terminate(self: WebView) WebViewError!void;
     
-    fn dispatch(self: WebView, ctx: anytype) WebViewError!void;
+    fn dispatch(self: WebView, ctx: *const CallbackContext) WebViewError!void;
     
     fn getWindow(self: WebView) ?*anyopaque;
 
@@ -118,7 +118,7 @@ const WebView = struct {
     
     fn eval(self: WebView, js: [:0]const u8) WebViewError!void;
     
-    fn bind(self: WebView, name: [:0]const u8, ctx: anytype) WebViewError!void;
+    fn bind(self: WebView, name: [:0]const u8, ctx: *const CallbackContext) WebViewError!void;
     
     fn unbind(self: WebView, name: [:0]const u8) WebViewError!void;
     
