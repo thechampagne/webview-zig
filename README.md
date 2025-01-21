@@ -88,7 +88,7 @@ const WebView = struct {
         NotFound,
     };
 
-    fn CallbackContext(func: anytype) type {
+    fn CallbackContext(func: [DispatchCallback|BindCallback]) type {
         return struct {
             fn init(data: ?*anyopaque) @This();
         };
