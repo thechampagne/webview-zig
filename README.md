@@ -9,7 +9,7 @@ Zig binding for a tiny cross-platform **webview** library to build modern cross-
 </p>
 
 ### Requirements
- - [Zig Compiler](https://ziglang.org/) - **0.12.0**
+ - [Zig Compiler](https://ziglang.org/) - **0.13.0**
  - Unix
    - [GTK3](https://gtk.org/) and [WebKitGTK](https://webkitgtk.org/)
  - Windows
@@ -18,11 +18,11 @@ Zig binding for a tiny cross-platform **webview** library to build modern cross-
    - [WebKit](https://webkit.org/)
 
 ### Usage
-#### Auto
+
 ```
 zig fetch --save https://github.com/thechampagne/webview-zig/archive/refs/heads/main.tar.gz
 ```
-#### Manual
+
 `build.zig.zon`:
 ```zig
 .{
@@ -45,13 +45,97 @@ exe.linkLibrary(webview.artifact("webviewStatic")); // or "webviewShared" for sh
 // exe.linkSystemLibrary("webview"); to link with installed prebuilt library without building
 ```
 
+### API
+
+```zig
+const WebView = struct {
+
+    const WebViewVersionInfo = struct {
+        version = struct {
+            major: c_uint,
+            minor: c_uint,
+            patch: c_uint,
+        },
+        version_number: [32]c_char,
+        pre_release: [48]c_char,
+        build_metadata: [48]c_char,
+    };
+
+    const DispatchCallback = *const fn (WebView, ?*anyopaque) void;
+
+    const BindCallback = *const fn ([:0]const u8, [:0]const u8, ?*anyopaque) void;
+
+    const WindowSizeHint = enum(c_uint) {
+        None,
+        Min,
+        Max,
+        Fixed
+    };
+
+    const NativeHandle = enum(c_uint) {
+        ui_window,
+        ui_widget,
+        browser_controller
+    };
+
+    const WebViewError = error {
+        MissingDependency,
+        Canceled,
+        InvalidState,
+        InvalidArgument,
+        Unspecified,
+        Duplicate,
+        NotFound,
+    };
+
+    fn CallbackContext(func: anytype) type {
+        return struct {
+            fn init(data: ?*anyopaque) @This();
+        };
+    }
+
+    fn create(debug: bool, window: ?*anyopaque) WebView;
+
+    fn run(self: WebView) WebViewError!void;
+
+    fn terminate(self: WebView) WebViewError!void;
+    
+    fn dispatch(self: WebView, ctx: anytype) WebViewError!void;
+    
+    fn getWindow(self: WebView) ?*anyopaque;
+
+    fn getNativeHandle(self: WebView, kind: NativeHandle) ?*anyopaque;
+    
+    fn setTitle(self: WebView, title: [:0]const u8) WebViewError!void;
+    
+    fn setSize(self: WebView, width: i32, height: i32, hint: WindowSizeHint) WebViewError!void;
+    
+    fn navigate(self: WebView, url: [:0]const u8) WebViewError!void;
+    
+    fn setHtml(self: WebView, html: [:0]const u8) WebViewError!void;
+    
+    fn init(self: WebView, js: [:0]const u8) WebViewError!void;
+    
+    fn eval(self: WebView, js: [:0]const u8) WebViewError!void;
+    
+    fn bind(self: WebView, name: [:0]const u8, ctx: anytype) WebViewError!void;
+    
+    fn unbind(self: WebView, name: [:0]const u8) WebViewError!void;
+    
+    fn ret(self: WebView ,seq: [:0]const u8, status: i32, result: [:0]const u8) WebViewError!void;
+    
+    fn version() *const WebViewVersionInfo;
+
+    fn destroy(self: WebView) WebViewError!void;
+}
+```
+
 ### References
- - [webview](https://github.com/webview/webview) - **0.10.0**
+ - [webview](https://github.com/webview/webview/tree/0.12.0) - **0.12.0**
 
 ### License
 
 This repo is released under the [MIT License](https://github.com/thechampagne/webview-zig/blob/main/LICENSE).
 
 Third party code:
- - [external/webview](https://github.com/thechampagne/webview-zig/tree/main/external/webview) licensed under the [MIT License](https://github.com/thechampagne/webview-zig/tree/main/external/webview/LICENSE).
  - [external/WebView2](https://github.com/thechampagne/webview-zig/tree/main/external/WebView2) licensed under the [BSD-3-Clause License](https://github.com/thechampagne/webview-zig/tree/main/external/WebView2/LICENSE).
