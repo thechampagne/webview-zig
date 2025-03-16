@@ -1,0 +1,10 @@
+.{
+    .name = "bind",
+    .version = "0.1.0",
+    .paths = .{""},
+    .dependencies = .{
+        .webview = .{
+            .path = "../../",
+        },
+    },
+}
