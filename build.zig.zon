@@ -1,6 +1,7 @@
 .{
-    .name = "webview",
+    .name = .webview,
     .version = "0.1.0",
+    .fingerprint = 0xd0d1ff8da6749a23,
     .dependencies = .{
         .webview = .{
             .url = "https://github.com/webview/webview/archive/refs/tags/0.12.0.tar.gz",
@@ -12,8 +13,8 @@
         "README.md",
         "examples",
         "build.zig",
-        "build.zig.zon", 
-        "src", 
+        "build.zig.zon",
+        "src",
         "external",
     },
 }

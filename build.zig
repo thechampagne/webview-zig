@@ -1,10 +1,9 @@
 const std = @import("std");
 
 pub fn build(b: *std.Build) void {
-
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
-    
+
     const webview = b.dependency("webview", .{});
 
     const webviewRaw = b.addTranslateC(.{
@@ -12,7 +11,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
         .target = target,
     }).createModule();
-    
+
     _ = b.addModule("webview", .{
         .root_source_file = b.path("src/webview.zig"),
         //.dependencies = &[_]std.Build.ModuleDependency{},
@@ -53,7 +52,7 @@ pub fn build(b: *std.Build) void {
         .target = target,
     });
     staticLib.addIncludePath(webview.path("core/include/webview/"));
-    staticLib.defineCMacro("WEBVIEW_STATIC", null);
+    staticLib.root_module.addCMacro("WEBVIEW_STATIC", "");
     staticLib.linkLibCpp();
     switch (target.query.os_tag orelse @import("builtin").os.tag) {
         .windows => {
@@ -99,7 +98,7 @@ pub fn build(b: *std.Build) void {
         .target = target,
     });
     sharedLib.addIncludePath(webview.path("core/include/webview/"));
-    sharedLib.defineCMacro("WEBVIEW_BUILD_SHARED", null);
+    staticLib.root_module.addCMacro("WEBVIEW_BUILD_SHARED", "");
     sharedLib.linkLibCpp();
     switch (target.query.os_tag orelse @import("builtin").os.tag) {
         .windows => {
