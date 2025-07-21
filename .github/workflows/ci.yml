@@ -17,9 +17,9 @@ jobs:
         prepare: |
           pkg install -y webkit2-gtk3 wget
         run: |
-          wget https://ziglang.org/download/0.13.0/zig-freebsd-x86_64-0.13.0.tar.xz
-          tar -xvf zig-freebsd-x86_64-0.12.1.tar.xz
-          ./zig-freebsd-x86_64-0.12.1/zig build
+          wget https://ziglang.org/builds/zig-x86_64-freebsd-0.15.0-dev.1160+e43617e68.tar.xz
+          tar -xvf zig-x86_64-freebsd-0.15.0-dev.1160+e43617e68.tar.xz
+          ./zig-x86_64-freebsd-0.15.0-dev.1160+e43617e68/zig build
 
   linux-build:
     runs-on: ubuntu-latest
@@ -27,7 +27,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: goto-bus-stop/setup-zig@v2
       with:
-        version: 0.13.0
+        version: 0.14.0
     - name: install packages
       run: sudo apt-get install libgtk-3-dev libwebkit2gtk-4.0-dev
     - run: zig build
@@ -38,7 +38,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: goto-bus-stop/setup-zig@v2
       with:
-        version: 0.13.0
+        version: 0.14.0
     - run: zig build
 
   windows-build:
@@ -47,5 +47,5 @@ jobs:
     - uses: actions/checkout@v4
     - uses: goto-bus-stop/setup-zig@v2
       with:
-        version: 0.13.0
+        version: 0.14.0
     - run: zig build
