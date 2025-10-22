@@ -1,10 +1,9 @@
 const std = @import("std");
 
 pub fn build(b: *std.Build) void {
-
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
-    
+
     const webview = b.dependency("webview", .{});
 
     const webviewRaw = b.addTranslateC(.{
@@ -12,7 +11,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
         .target = target,
     }).createModule();
-    
+
     _ = b.addModule("webview", .{
         .root_source_file = b.path("src/webview.zig"),
         //.dependencies = &[_]std.Build.ModuleDependency{},
@@ -46,11 +45,13 @@ pub fn build(b: *std.Build) void {
     //         objectFile.linkSystemLibrary("webkit2gtk-4.0");
     //     }
     // }
-
-    const staticLib = b.addStaticLibrary(.{
+    const staticLib = b.addLibrary(.{
         .name = "webviewStatic",
-        .optimize = optimize,
-        .target = target,
+        .root_module = b.addModule("webviewStatic", .{
+            .target = target,
+            .optimize = optimize,
+        }),
+        .linkage = .static,
     });
     staticLib.addIncludePath(webview.path("core/include/webview/"));
     staticLib.root_module.addCMacro("WEBVIEW_STATIC", "");
@@ -93,10 +94,13 @@ pub fn build(b: *std.Build) void {
     }
     b.installArtifact(staticLib);
 
-    const sharedLib = b.addSharedLibrary(.{
+    const sharedLib = b.addLibrary(.{
         .name = "webviewShared",
-        .optimize = optimize,
-        .target = target,
+        .root_module = b.addModule("webviewShared", .{
+            .target = target,
+            .optimize = optimize,
+        }),
+        .linkage = .dynamic,
     });
     sharedLib.addIncludePath(webview.path("core/include/webview/"));
     sharedLib.root_module.addCMacro("WEBVIEW_BUILD_SHARED", "");
@@ -140,9 +144,14 @@ pub fn build(b: *std.Build) void {
     b.installArtifact(sharedLib);
 
     const unit_tests = b.addTest(.{
-        .root_source_file = b.path("src/test.zig"),
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.addModule(
+            "webviewTest",
+            .{
+                .root_source_file = b.path("src/test.zig"),
+                .target = target,
+                .optimize = optimize,
+            },
+        ),
     });
     unit_tests.root_module.addImport("webviewRaw", webviewRaw);
     unit_tests.linkLibrary(staticLib);
