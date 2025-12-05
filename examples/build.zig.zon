@@ -1,10 +1,11 @@
 .{
-    .name = "bind",
+    .name = .examples,
+    .fingerprint = 0x7bd0ad450d8e52ad,
     .version = "0.1.0",
     .paths = .{""},
     .dependencies = .{
         .webview = .{
-            .path = "../../",
+            .path = "../",
         },
     },
 }

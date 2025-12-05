@@ -1,3 +1,4 @@
+const std = @import("std");
 const WebView = @import("webview").WebView;
 
 const JS =
@@ -9,7 +10,7 @@ const JS =
 pub fn main() !void {
     const w = WebView.create(false, null);
     try w.setTitle("Calling Javascript");
-    try w.setSize(480, 320, WebView.WindowSizeHint.None);
+    try w.setSize(480, 320, .none);
     try w.eval(JS);
     try w.run();
     try w.destroy();

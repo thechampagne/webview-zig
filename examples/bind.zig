@@ -16,9 +16,9 @@ const html =
         \\ </script>
 ;
 
-pub fn increment(id: [:0]const u8, req: [:0]const u8, ctx: ?*anyopaque) void {
+pub fn increment(id: [*:0]const u8, req: [*:0]const u8, ctx: ?*anyopaque) callconv(.c) void {
     var webview: *const WebView = @ptrCast(@alignCast(ctx));
-    const num_str = std.mem.trim(u8, req, "[\"\"]");
+    const num_str = std.mem.trim(u8, std.mem.sliceTo(req, 0), "[\"\"]");
     var num = std.fmt.parseInt(i32, num_str, 10) catch {
         std.debug.print("cant not parse int.\n", .{});
         unreachable;
@@ -29,7 +29,7 @@ pub fn increment(id: [:0]const u8, req: [:0]const u8, ctx: ?*anyopaque) void {
         std.debug.print("cant not copy to result.\n", .{});
         unreachable;
     };
-    webview.ret(id, 0, result) catch {
+    webview.ret(std.mem.sliceTo(id, 0), 0, result) catch {
         std.debug.print("cant not return from increment function.\n", .{});
         unreachable;
     };
@@ -39,11 +39,9 @@ pub fn increment(id: [:0]const u8, req: [:0]const u8, ctx: ?*anyopaque) void {
 pub fn main() !void {
     var w = WebView.create(true, null);
     try w.setTitle("Bind Example");
-    try w.setSize(480, 320, .None);
+    try w.setSize(480, 320, .none);
 
-    const callback = WebView.CallbackContext(&increment).init(@ptrCast(&w));
-
-    try w.bind("increment", &callback);
+    try w.bind("increment", &increment, &w);
     
     try w.setHtml(html);
     try w.run();
