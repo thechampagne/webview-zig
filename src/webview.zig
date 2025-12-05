@@ -43,15 +43,15 @@ pub const WebView = struct {
 
     pub const WebViewVersionInfo = raw.webview_version_info_t;
 
-    pub const DispatchCallback = *const fn (WebView, ?*anyopaque) void;
+    pub const DispatchCallback = *const fn (?*anyopaque, ?*anyopaque) callconv(.c) void;
 
-    pub const BindCallback = *const fn ([:0]const u8, [:0]const u8, ?*anyopaque) void;
+    pub const BindCallback = *const fn ([*:0]const u8, [*:0]const u8, ?*anyopaque) callconv(.c) void;
 
     pub const WindowSizeHint = enum(c_uint) {
-        None,
-        Min,
-        Max,
-        Fixed
+        none,
+        min,
+        max,
+        fixed
     };
 
     pub const NativeHandle = enum(c_uint) {
@@ -70,17 +70,6 @@ pub const WebView = struct {
         NotFound,
     };
 
-    pub fn CallbackContext(func: anytype) type {
-        return struct {
-            func: @TypeOf(func) = func,
-            data: ?*anyopaque,
-
-            pub fn init(data: ?*anyopaque) @This() {
-                return .{.data = data};
-            }
-        };
-    }
-
     pub fn create(debug: bool, window: ?*anyopaque) Self {
         return Self{ .webview = raw.webview_create(@intFromBool(debug), window) };
     }
@@ -95,23 +84,8 @@ pub const WebView = struct {
         if (ret_code != raw.WEBVIEW_ERROR_OK) return handle_webview_error(ret_code);
     }
     
-    pub fn dispatch(self: Self, ctx: anytype) WebViewError!void {
-        const T = @TypeOf(ctx.func);
-        if (T != DispatchCallback and T != fn (WebView, ?*anyopaque) void) {
-            @compileError(fmt.comptimePrint("expected type 'fn (WebView, ?*anyopaque) void' or '*const fn (WebView, ?*anyopaque) void', found '{any}'",
-                                            .{T}));
-        }
-        const Callback = struct {
-            fn function(w: raw.webview_t, arg: ?*anyopaque) callconv(.C) void {
-                const cb: @TypeOf(ctx) = @ptrCast(@alignCast(arg));
-                if (@TypeOf(ctx.func) == DispatchCallback) {
-                    cb.func(.{ .webview = w}, cb.data);
-                } else {
-                    @call(.always_inline, ctx.func, .{.{ .webview = w}, ctx.data});
-                }
-            }
-        };
-        const ret_code = raw.webview_dispatch(self.webview, Callback.function, @constCast(ctx));
+    pub fn dispatch(self: Self, func: DispatchCallback, arg: ?*anyopaque) WebViewError!void {
+        const ret_code = raw.webview_dispatch(self.webview, func, arg);
         if (ret_code != raw.WEBVIEW_ERROR_OK) return handle_webview_error(ret_code);
     }
     
@@ -153,22 +127,8 @@ pub const WebView = struct {
         if (ret_code != raw.WEBVIEW_ERROR_OK) return handle_webview_error(ret_code);
     }
     
-    pub fn bind(self: Self, name: [:0]const u8, ctx: anytype) WebViewError!void {
-        const T = @TypeOf(ctx.func);
-        if (T != BindCallback and T != fn ([:0]const u8, [:0]const u8, ?*anyopaque) void) {
-            @compileError(fmt.comptimePrint("expected type 'fn ([:0]const u8, [:0]const u8, ?*anyopaque) void' or '*const fn ([:0]const u8, [:0]const u8, ?*anyopaque) void', found '{any}'", .{T}));
-        }
-        const Callback = struct {
-            fn function(seq: [*c]const u8, req: [*c]const u8, arg: ?*anyopaque) callconv(.C) void {
-                const cb: @TypeOf(ctx) = @ptrCast(@alignCast(arg));
-                if (@TypeOf(ctx.func) == BindCallback) {
-                    cb.func(mem.sliceTo(seq, 0), mem.sliceTo(req, 0), cb.data);
-                } else {
-                    @call(.always_inline, ctx.func, .{mem.sliceTo(seq, 0), mem.sliceTo(req, 0), ctx.data});
-                }
-            }
-        };
-        const ret_code = raw.webview_bind(self.webview, name.ptr, Callback.function, @constCast(ctx));
+    pub fn bind(self: Self, name: [:0]const u8, func: BindCallback, arg: ?*anyopaque) WebViewError!void {
+        const ret_code = raw.webview_bind(self.webview, name.ptr, @ptrCast(func), arg);
         if (ret_code != raw.WEBVIEW_ERROR_OK) return handle_webview_error(ret_code);
     }
     

@@ -61,15 +61,15 @@ const WebView = struct {
         build_metadata: [48]c_char,
     };
 
-    const DispatchCallback = *const fn (WebView, ?*anyopaque) void;
+    const DispatchCallback = *const fn (?*anyopaque, ?*anyopaque) callconv(.c) void;
 
-    const BindCallback = *const fn ([:0]const u8, [:0]const u8, ?*anyopaque) void;
+    const BindCallback = *const fn ([*:0]const u8, [*:0]const u8, ?*anyopaque) callconv(.c) void;
 
     const WindowSizeHint = enum(c_uint) {
-        None,
-        Min,
-        Max,
-        Fixed
+        none,
+        min,
+        max,
+        fixed
     };
 
     const NativeHandle = enum(c_uint) {
@@ -88,19 +88,13 @@ const WebView = struct {
         NotFound,
     };
 
-    fn CallbackContext(func: [DispatchCallback|BindCallback]) type {
-        return struct {
-            fn init(data: ?*anyopaque) @This();
-        };
-    }
-
     fn create(debug: bool, window: ?*anyopaque) WebView;
 
     fn run(self: WebView) WebViewError!void;
 
     fn terminate(self: WebView) WebViewError!void;
     
-    fn dispatch(self: WebView, ctx: *const CallbackContext) WebViewError!void;
+    fn dispatch(self: WebView, func: DispatchCallback, arg: ?*anyopaque) WebViewError!void;
     
     fn getWindow(self: WebView) ?*anyopaque;
 
@@ -118,7 +112,7 @@ const WebView = struct {
     
     fn eval(self: WebView, js: [:0]const u8) WebViewError!void;
     
-    fn bind(self: WebView, name: [:0]const u8, ctx: *const CallbackContext) WebViewError!void;
+    fn bind(self: WebView, name: [:0]const u8, func: BindCallback, arg: ?*anyopaque) WebViewError!void;
     
     fn unbind(self: WebView, name: [:0]const u8) WebViewError!void;
     
