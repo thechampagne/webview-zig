@@ -15,7 +15,7 @@ jobs:
       with:
         copyback: false
         prepare: |
-          pkg install -y webkit2-gtk3 wget
+          pkg install -y webkit2-gtk wget
         run: |
           wget https://ziglang.org/download/0.15.2/zig-x86_64-freebsd-0.15.2.tar.xz
           tar -xvf zig-x86_64-freebsd-0.15.2.tar.xz
@@ -29,7 +29,7 @@ jobs:
       with:
         version: 0.15.2
     - name: install packages
-      run: sudo apt-get install libgtk-3-dev libwebkit2gtk-4.0-dev
+      run: sudo apt-get install libgtk-3-dev libwebkit2gtk-4.1-dev
     - run: zig build
 
   macos-build:
