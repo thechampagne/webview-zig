@@ -84,12 +84,12 @@ pub fn build(b: *std.Build) void {
             staticLib.addIncludePath(.{ .cwd_relative = "/usr/local/include/atk-1.0/" });
             staticLib.addIncludePath(.{ .cwd_relative = "/usr/local/include/libsoup-3.0/" });
             staticLib.linkSystemLibrary("gtk-3");
-            staticLib.linkSystemLibrary("webkit2gtk-4.0");
+            staticLib.linkSystemLibrary("webkit2gtk-4.1");
         },
         else => {
             staticLib.addCSourceFile(.{ .file = webview.path("core/src/webview.cc"), .flags = &.{"-std=c++11"} });
             staticLib.linkSystemLibrary("gtk+-3.0");
-            staticLib.linkSystemLibrary("webkit2gtk-4.0");
+            staticLib.linkSystemLibrary("webkit2gtk-4.1");
         },
     }
     b.installArtifact(staticLib);
@@ -133,12 +133,12 @@ pub fn build(b: *std.Build) void {
             sharedLib.addIncludePath(.{ .cwd_relative = "/usr/local/include/atk-1.0/" });
             sharedLib.addIncludePath(.{ .cwd_relative = "/usr/local/include/libsoup-3.0/" });
             sharedLib.linkSystemLibrary("gtk-3");
-            sharedLib.linkSystemLibrary("webkit2gtk-4.0");
+            sharedLib.linkSystemLibrary("webkit2gtk-4.1");
         },
         else => {
             sharedLib.addCSourceFile(.{ .file = webview.path("core/src/webview.cc"), .flags = &.{"-std=c++11"} });
             sharedLib.linkSystemLibrary("gtk+-3.0");
-            sharedLib.linkSystemLibrary("webkit2gtk-4.0");
+            sharedLib.linkSystemLibrary("webkit2gtk-4.1");
         },
     }
     b.installArtifact(sharedLib);
